@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes", user-scalable=no>
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>入~這個字在騙你ㄟ</title>
 
@@ -152,6 +152,23 @@ let level=0,seq=[],colorSeq=[],idx=0,answer=[],locked=false;
 let stageIndex = 0;
 let mistakes=[];
 let audioCtx=new (AudioContext||webkitAudioContext)();
+
+window.onload = () => {
+  document.addEventListener('touchstart', (event) => {
+    if (event.touches.length > 1) {
+       event.preventDefault();
+    }
+  });
+  
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (event) => {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+}
 
 function musicBeat(freq=440){
   const o=audioCtx.createOscillator();
@@ -377,3 +394,4 @@ function nextStage(){
 </script>
 </body>
 </html>
+
