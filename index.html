@@ -14,145 +14,44 @@
   --yellow:#ffe066;
   --green:#4dff88;
 }
-
 html, body {
-  margin:0;
   touch-action: manipulation;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
-  background:#05080f;
-  color:white;
-  overflow:hidden;
 }
-
-/* === 背景層 === */
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#05080f;color:white;overflow:hidden;}
 #bg{position:fixed;inset:0;background:radial-gradient(circle at top,#0f1b3d,#05080f 70%);z-index:-3;}
 #colorLayer{position:fixed;inset:0;background:#000;opacity:.65;transition:background .45s ease;z-index:-2;}
 #scanlines{position:fixed;inset:0;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.04) 0px,rgba(255,255,255,.04) 1px,transparent 2px,transparent 6px);pointer-events:none;z-index:-1;}
-
-/* === 畫面容器 === */
-.screen{
-  display:none;
-  height:100vh;
-  padding: clamp(16px, 5vw, 120px);
-  box-sizing:border-box;
-  text-align:center;
-}
-.active{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  animation:fade .4s ease;
-}
+.screen{display:none;height:100vh;padding:20px;box-sizing:border-box;text-align:center;}
+.active{display:flex;flex-direction:column;justify-content:center;align-items:center;animation:fade .4s ease;}
 @keyframes fade{from{opacity:0;transform:scale(.95)}to{opacity:1}}
-
-/* === 文字尺寸（手機 → 電視） === */
-#stage{
-  font-size: clamp(20px, 3vw, 48px);
-  letter-spacing:2px;
-  text-shadow:0 0 12px cyan;
-}
-#rule{
-  opacity:.85;
-  margin-top:6px;
-  font-size: clamp(16px, 2.5vw, 32px);
-}
-#countdown{
-  font-size: clamp(64px, 10vw, 160px);
-  margin:30px 0;
-  animation:pulse 1s infinite;
-}
+#stage{font-size:28px;letter-spacing:2px;text-shadow:0 0 12px cyan}
+#rule{opacity:.85;margin-top:6px}
+#countdown{font-size:96px;margin:30px 0;animation:pulse 1s infinite}
 @keyframes pulse{50%{text-shadow:0 0 30px cyan}}
-
-.feedback{
-  height:60px;
-  font-size: clamp(22px, 4vw, 56px);
-  margin-top:20px;
-  text-shadow:0 0 16px #fff;
-}
-
-/* === Canvas：關鍵設定 === */
-canvas{
-  width: min(90vw, 70vh * 1.54);
-  aspect-ratio: 400 / 260;
-  height: auto;
-}
-
-/* === 按鈕 === */
-.buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap: clamp(12px, 3vw, 32px);
-  width:100%;
-  margin-top:auto;
-}
-button{
-  height: clamp(72px, 12vh, 140px);
-  font-size: clamp(22px, 4vw, 48px);
-  border:none;
-  border-radius:20px;
-  color:white;
-  font-weight:bold;
-  letter-spacing:2px;
-}
+canvas{width:90%;max-width:420px;height:260px}
+.feedback{height:60px;font-size:34px;margin-top:20px;text-shadow:0 0 16px #fff}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;margin-top:auto}
+button{height:96px;font-size:34px;border:none;border-radius:20px;color:white;font-weight:bold;letter-spacing:2px}
 .red{background:linear-gradient(135deg,#ff3b3b,#a00000)}
 .blue{background:linear-gradient(135deg,#3b8dff,#002a7a)}
 .yellow{background:linear-gradient(135deg,#ffe066,#b89a00);color:#222}
 .green{background:linear-gradient(135deg,#4dff88,#007a3d)}
-
-.control{
-  margin-top:22px;
-  padding:16px 36px;
-  font-size: clamp(18px, 3vw, 32px);
-  border-radius:40px;
-  border:none;
-  background:linear-gradient(135deg,#00f5ff,#0066ff);
-  color:#000;
-  font-weight:bold;
-  box-shadow:0 0 25px #00f5ff;
-}
+.control{margin-top:22px;padding:16px 36px;font-size:22px;border-radius:40px;border:none;background:linear-gradient(135deg,#00f5ff,#0066ff);color:#000;font-weight:bold;box-shadow:0 0 25px #00f5ff}
 .control:disabled{opacity:.4;box-shadow:none}
-
-/* === 錯題回顧 === */
 #reviewList{max-height:400px;overflow-y:auto;width:100%;margin:20px 0;padding:10px}
-.mistake-item{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:20px;
-  padding:15px;
-  margin:10px 0;
-  background:rgba(255,255,255,0.05);
-  border-radius:10px;
-  border-left:4px solid #ff4d4d;
-}
+.mistake-item{display:flex;align-items:center;justify-content:center;gap:20px;padding:15px;margin:10px 0;background:rgba(255,255,255,0.05);border-radius:10px;border-left:4px solid #ff4d4d}
 .mistake-item .index{font-size:24px;font-weight:bold;color:#00f5ff}
 .mistake-item .colors{display:flex;gap:10px;font-size:20px}
 .correct-color{color:#4dff88}
 .wrong-color{color:#ff4d4d;text-decoration:line-through}
-
-#progressBar{
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  margin:20px 0;
-  min-height:50px;
-  flex-wrap:wrap;
-}
-.progress-box{
-  width:40px;height:40px;
-  border-radius:8px;
-  border:2px solid rgba(255,255,255,0.3);
-  box-shadow:0 0 10px rgba(0,245,255,0.3);
-  animation:popIn .3s ease;
-}
+#progressBar{display:flex;gap:8px;justify-content:center;margin:20px 0;min-height:50px;flex-wrap:wrap}
+.progress-box{width:40px;height:40px;border-radius:8px;border:2px solid rgba(255,255,255,0.3);box-shadow:0 0 10px rgba(0,245,255,0.3);animation:popIn 0.3s ease}
 @keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
 </style>
 </head>
-
 <body>
 <div id="bg"></div><div id="colorLayer"></div><div id="scanlines"></div>
 
@@ -164,7 +63,7 @@ button{
 </div>
 
 <div id="playScreen" class="screen">
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" width="400" height="260"></canvas>
   <div id="feedback" class="feedback"></div>
 </div>
 
@@ -186,26 +85,8 @@ button{
 </div>
 
 <script>
-/* ================= Canvas DPR 自適應 ================= */
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-const MAX_DPR = 2;
-
-function resizeCanvas(){
-  const rect = canvas.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-
-  canvas.width  = rect.width  * dpr;
-  canvas.height = rect.height * dpr;
-
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-/* ================= 遊戲原邏輯（僅微調座標） ================= */
-
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
 const colorLayer=document.getElementById('colorLayer');
 const startBtn=document.getElementById('startBtn');
 
@@ -216,17 +97,78 @@ const COLORS={
   '綠':{c:'#4dff88',zy:'ㄌㄩˋ'}
 };
 
-const STAGES=[
-  {name:'簡單-1',count:5,speed:1200,mode:'bg',answerRule:'text'},
-  {name:'簡單-2',count:6,speed:1200,mode:'bg',answerRule:'text'},
-  {name:'中等-3',count:8,speed:1350,mode:'bg',answerRule:'text'},
-  {name:'高級-4',count:6,speed:1000,mode:'text',answerRule:'word'},
-  {name:'高級-5',count:6,speed:1200,mode:'text',answerRule:'word'},
-  {name:'困難-6',count:7,speed:1300,mode:'text',answerRule:'text'}
+const STAGES = [
+  {
+    stage: 1,
+    name: '簡單 - 第1關',
+    count: 5,
+    speed: 1200,
+    mode: 'bg',
+    answerRule: 'text'
+  },
+  {
+    stage: 2,
+    name: '簡單 - 第2關',
+    count: 6,
+    speed: 1200,
+    mode: 'bg',
+    answerRule: 'text'
+  },
+  {
+    stage: 3,
+    name: '中等 - 第3關',
+    count: 8,
+    speed: 1350,
+    mode: 'bg',
+    answerRule: 'text'
+  },
+  {
+    stage: 4,
+    name: '高級 - 第4關',
+    count: 6,
+    speed: 1000,
+    mode: 'text',
+    answerRule: 'word'
+  },
+  {
+    stage: 5,
+    name: '高級 - 第5關',
+    count: 6,
+    speed: 1200,
+    mode: 'text',
+    answerRule: 'word'
+  },
+  {
+    stage: 6,
+    name: '困難 - 第6關',
+    count: 7,
+    speed: 1300,
+    mode: 'text',
+    answerRule: 'text'
+  }
 ];
 
-let level=0,seq=[],colorSeq=[],idx=0,answer=[],mistakes=[];
+let level=0,seq=[],colorSeq=[],idx=0,answer=[],locked=false;
+let stageIndex = 0;
+let mistakes=[];
 let audioCtx=new (AudioContext||webkitAudioContext)();
+
+window.onload = () => {
+  document.addEventListener('touchstart', (event) => {
+    if (event.touches.length > 1) {
+       event.preventDefault();
+    }
+  });
+  
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (event) => {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+}
 
 function musicBeat(freq=440){
   const o=audioCtx.createOscillator();
@@ -238,25 +180,33 @@ function musicBeat(freq=440){
   o.start();o.stop(audioCtx.currentTime+0.3);
 }
 
-function drawChar(word, interference){
-  const w = canvas.width / (window.devicePixelRatio||1);
-  const h = canvas.height / (window.devicePixelRatio||1);
+function drawChar(word, interferenceColor){
+  ctx.clearRect(0,0,400,260);
+  ctx.textAlign='center';ctx.textBaseline='middle';
 
-  ctx.clearRect(0,0,w,h);
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
+  const data=COLORS[word];
+  const mode=STAGES[level].mode;
 
-  ctx.font = `bold ${Math.min(w,h)*0.45}px Microsoft JhengHei`;
+  // === 中央中文字 ===
+  ctx.font='120px Microsoft JhengHei';
   ctx.lineWidth=6;
 
-  if(STAGES[level].mode==='text'){
+  if(mode==='text'){
     ctx.strokeStyle='black';
-    ctx.strokeText(word,w/2,h/2);
-    ctx.fillStyle=interference?COLORS[interference].c:'#fff';
+    ctx.strokeText(word,200,130);
+    // 使用干擾顏色來顯示文字
+    ctx.fillStyle=interferenceColor ? COLORS[interferenceColor].c : data.c;
   }else{
+    // 低年級：文字固定白色，看背景
     ctx.fillStyle='#fff';
   }
-  ctx.fillText(word,w/2,h/2);
+  ctx.fillText(word,200,130);
+
+  // === 注音（直向，右側） ===
+  ctx.font='28px Microsoft JhengHei';
+  ctx.fillStyle='#fff';
+  const zy=data.zy.split('');
+  zy.forEach((z,i)=>ctx.fillText(z,300,90+i*30));
 }
 
 function loadPause(){
@@ -264,12 +214,22 @@ function loadPause(){
   playScreen.classList.remove('active');
   answerScreen.classList.remove('active');
   stage.textContent=`關卡 ${level+1}｜${STAGES[level].name}`;
-  rule.textContent=STAGES[level].answerRule==='word'?'看文字內容按':'看顏色按';
-  startBtn.disabled=false;
+  const mode=STAGES[level].mode;
+  const answerRule=STAGES[level].answerRule;
+  if(mode==='bg'){
+    rule.textContent="看背景顏色按";
+  }else if(answerRule==='word'){
+    rule.textContent="看文字內容按（不看顏色）";
+  }else{
+    rule.textContent="看文字顏色按";
+  }
+  startBtn.disabled=false;locked=false;
   colorLayer.style.background='#000';
 }
 
 function startSequence(){
+  if(locked) return;
+  locked=true;startBtn.disabled=true;
   let c=3;countdown.textContent=c;
   const t=setInterval(()=>{
     musicBeat(600);
@@ -279,14 +239,21 @@ function startSequence(){
 }
 
 function generate(){
-  seq=[];colorSeq=[];
-  const k=Object.keys(COLORS);
+  seq=[];colorSeq=[];const k=Object.keys(COLORS);
+  const mode=STAGES[level].mode;
   for(let i=0;i<STAGES[level].count;i++){
-    const w=k[Math.random()*4|0];
-    seq.push(w);
-    colorSeq.push(STAGES[level].mode==='text'
-      ? k.filter(x=>x!==w)[Math.random()*3|0]
-      : null);
+    const word=k[Math.random()*4|0];
+    seq.push(word);
+    // 在 text 模式下，生成與文字不同的干擾顏色
+    if(mode==='text'){
+      let interferenceWord;
+      do{
+        interferenceWord=k[Math.random()*4|0];
+      }while(interferenceWord===word);
+      colorSeq.push(interferenceWord); // 存储颜色名而不是颜色值
+    }else{
+      colorSeq.push(null);
+    }
   }
 }
 
@@ -294,64 +261,136 @@ function play(){
   pauseScreen.classList.remove('active');
   playScreen.classList.add('active');
   idx=0;
-  (function next(){
+  const stage = STAGES[stageIndex];
+
+  function next(){
     if(idx>=seq.length){showAnswer();return;}
-    const word=seq[idx];
-    colorLayer.style.background=colorSeq[idx]?COLORS[colorSeq[idx]].c:COLORS[word].c;
-    drawChar(word,colorSeq[idx]);
+    const word = seq[idx];
+    const data = COLORS[word];
+    const interferenceColor = colorSeq[idx];
+
+    // 背景仍隨顏色變化（干擾用）
+    colorLayer.style.background = interferenceColor ? COLORS[interferenceColor].c : data.c;
+
+    drawChar(word, interferenceColor);
     musicBeat(420);
     idx++;
-    setTimeout(next,STAGES[level].speed);
-  })();
+    setTimeout(next, stage.speed);
+  }
+  next();
 }
+
 
 function showAnswer(){
   playScreen.classList.remove('active');
   answerScreen.classList.add('active');
   answer=[];
-  progressBar.innerHTML='';
+  document.getElementById('progressBar').innerHTML='';
 }
 
 function press(c){
+  // 重要：玩家是在「回想記憶中的顏色」
   answer.push(c);
-  const b=document.createElement('div');
-  b.className='progress-box';
-  b.style.background=COLORS[c].c;
-  progressBar.appendChild(b);
+
+  // 更新進度條
+  const progressBar=document.getElementById('progressBar');
+  const box=document.createElement('div');
+  box.className='progress-box';
+  box.style.background=COLORS[c].c;
+  progressBar.appendChild(box);
+
+  // 視覺回饋：依記憶顏色閃光
+  colorLayer.style.background = COLORS[c].c;
+  colorLayer.style.opacity = 0.9;
+  setTimeout(()=>colorLayer.style.opacity = 0.65,200);
+
+  // 記憶確認音（比播放節奏低一點音高）
+  musicBeat(260);
+
   if(answer.length===seq.length){
-    let ok=0;mistakes=[];
+    let ok=0;
+    mistakes=[];
+    const mode=STAGES[level].mode;
+    const answerRule=STAGES[level].answerRule;
     for(let i=0;i<seq.length;i++){
-      const correct=STAGES[level].answerRule==='word'?seq[i]:colorSeq[i]||seq[i];
-      if(answer[i]===correct) ok++;
-      else mistakes.push({index:i+1,correct,wrong:answer[i]});
+      let correct=false;
+      let correctAnswer=seq[i];
+      
+      if(answerRule==='word'){
+        // 答案看文字內容（高級第4-5關）
+        correct=(seq[i]===answer[i]);
+      }else if(answerRule==='text' && mode==='text'){
+        // 答案看文字顏色（干擾顏色）-困難第6關
+        correct=(colorSeq[i]===answer[i]);
+        correctAnswer=colorSeq[i];
+      }else if(answerRule==='text' && mode==='bg'){
+        // 答案看背景顏色-簡單中等第1-3關
+        correct=(seq[i]===answer[i]);
+      }
+      
+      if(correct){
+        ok++;
+      }else{
+        mistakes.push({index:i+1,correct:correctAnswer,wrong:answer[i]});
+      }
     }
-    setTimeout(()=>mistakes.length?showReview():nextLevel(),1200);
+    result(ok);
+  }
+}
+
+
+function result(ok){
+  answerScreen.classList.remove('active');
+  playScreen.classList.add('active');
+  colorLayer.style.background='#111';
+  ctx.clearRect(0,0,400,260);
+  ctx.fillStyle='#fff';ctx.font='48px Microsoft JhengHei';
+  ctx.fillText(`答對 ${ok}/${seq.length}`,200,130);
+  
+  if(mistakes.length>0){
+    setTimeout(()=>showReview(),2200);
+  }else{
+    setTimeout(()=>{level=(level+1)%STAGES.length;loadPause();},2200);
   }
 }
 
 function showReview(){
-  answerScreen.classList.remove('active');
+  playScreen.classList.remove('active');
   reviewScreen.classList.add('active');
+  
+  const reviewList=document.getElementById('reviewList');
   reviewList.innerHTML='';
+  
   mistakes.forEach(m=>{
-    reviewList.innerHTML+=`
-      <div class="mistake-item">
-        <span class="index">第 ${m.index} 題</span>
-        <div class="colors">
-          <span class="wrong-color">${m.wrong}</span> →
-          <span class="correct-color">${m.correct}</span>
-        </div>
-      </div>`;
+    const item=document.createElement('div');
+    item.className='mistake-item';
+    item.innerHTML=`
+      <span class="index">第 ${m.index} 題</span>
+      <div class="colors">
+        <span class="wrong-color">${m.wrong}</span>
+        <span>→</span>
+        <span class="correct-color">${m.correct}</span>
+      </div>
+    `;
+    reviewList.appendChild(item);
   });
 }
 
-function nextLevel(){
+function continueGame(){
   reviewScreen.classList.remove('active');
   level=(level+1)%STAGES.length;
   loadPause();
 }
 
 loadPause();
+
+function nextStage(){
+  stageIndex++;
+  if(stageIndex >= STAGES.length){
+    stageIndex = 0;
+  }
+}
+
 </script>
 </body>
 </html>
