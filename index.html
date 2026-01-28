@@ -24,14 +24,27 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 #bg{position:fixed;inset:0;background:radial-gradient(circle at top,#0f1b3d,#05080f 70%);z-index:-3;}
 #colorLayer{position:fixed;inset:0;background:#000;opacity:.65;transition:background .45s ease;z-index:-2;}
 #scanlines{position:fixed;inset:0;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.04) 0px,rgba(255,255,255,.04) 1px,transparent 2px,transparent 6px);pointer-events:none;z-index:-1;}
-.screen{display:none;height:100vh;padding:20px;box-sizing:border-box;text-align:center;}
+.screen{display:none;height:100vh;padding:clamp(16px,5vw,120px);box-sizing:border-box;text-align:center;}
 .active{display:flex;flex-direction:column;justify-content:center;align-items:center;animation:fade .4s ease;}
 @keyframes fade{from{opacity:0;transform:scale(.95)}to{opacity:1}}
-#stage{font-size:28px;letter-spacing:2px;text-shadow:0 0 12px cyan}
+#stage{
+  font-size: clamp(20px, 3vw, 48px);
+}
+
+#countdown{
+  font-size: clamp(64px, 10vw, 160px);
+}
+
+.feedback{
+  font-size: clamp(22px, 4vw, 56px);
+}
+
+button{
+  font-size: clamp(22px, 4vw, 48px);
+}
 #rule{opacity:.85;margin-top:6px}
-#countdown{font-size:96px;margin:30px 0;animation:pulse 1s infinite}
 @keyframes pulse{50%{text-shadow:0 0 30px cyan}}
-canvas{width:90%;max-width:420px;height:260px}
+canvas{width:90%;height:auto;aspect-ratio:400/260}
 .feedback{height:60px;font-size:34px;margin-top:20px;text-shadow:0 0 16px #fff}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;margin-top:auto}
 button{height:96px;font-size:34px;border:none;border-radius:20px;color:white;font-weight:bold;letter-spacing:2px}
@@ -152,7 +165,14 @@ let level=0,seq=[],colorSeq=[],idx=0,answer=[],locked=false;
 let stageIndex = 0;
 let mistakes=[];
 let audioCtx=new (AudioContext||webkitAudioContext)();
-
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 window.onload = () => {
   document.addEventListener('touchstart', (event) => {
     if (event.touches.length > 1) {
@@ -181,7 +201,12 @@ function musicBeat(freq=440){
 }
 
 function drawChar(word, interferenceColor){
-  ctx.clearRect(0,0,400,260);
+ 
+  const w = canvas.width / devicePixelRatio;
+const h = canvas.height / devicePixelRatio;
+
+ctx.clearRect(0,0,w,h);
+
   ctx.textAlign='center';ctx.textBaseline='middle';
 
   const data=COLORS[word];
@@ -193,14 +218,15 @@ function drawChar(word, interferenceColor){
 
   if(mode==='text'){
     ctx.strokeStyle='black';
-    ctx.strokeText(word,200,130);
+    ctx.strokeText(word, w/2, h/2);
+
     // 使用干擾顏色來顯示文字
     ctx.fillStyle=interferenceColor ? COLORS[interferenceColor].c : data.c;
   }else{
     // 低年級：文字固定白色，看背景
     ctx.fillStyle='#fff';
   }
-  ctx.fillText(word,200,130);
+  ctx.fillText(word, w/2, h/2);
 
   // === 注音（直向，右側） ===
   ctx.font='28px Microsoft JhengHei';
